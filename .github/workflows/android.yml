@@ -3,8 +3,6 @@ name: Build Kivy APK
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   build:
@@ -25,10 +23,6 @@ jobs:
         sudo apt install -y libncurses6 libstdc++6 zlib1g zlib1g-dev libffi-dev libssl-dev unzip openjdk-17-jdk
         python -m pip install --upgrade pip
         pip install cython buildozer
-        
-    - name: Accept Android Licenses
-      run: |
-            yes | $HOME/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager --licenses
 
     - name: Accept Android SDK Licenses
       run: |
@@ -36,11 +30,8 @@ jobs:
         echo "### Accepted licenses" > ~/.android/repositories.cfg
         yes | sdkmanager --licenses || true
 
-    - name: Force build-tools version in buildozer.spec
+    - name: Force correct build-tools version
       run: |
-        if grep -q "^# *android.build_tools" buildozer.spec; then
-          sed -i '/^# *android.build_tools/s/^# *//' buildozer.spec
-        fi
         sed -i 's/^android.build_tools =.*/android.build_tools = 34.0.0/' buildozer.spec || echo "android.build_tools = 34.0.0" >> buildozer.spec
 
     - name: Build the APK
