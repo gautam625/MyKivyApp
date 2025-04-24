@@ -25,6 +25,10 @@ jobs:
         sudo apt install -y libncurses6 libstdc++6 zlib1g zlib1g-dev libffi-dev libssl-dev unzip openjdk-17-jdk
         python -m pip install --upgrade pip
         pip install cython buildozer
+        
+    - name: Accept Android Licenses
+      run: |
+            yes | $HOME/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager --licenses
 
     - name: Accept Android SDK Licenses
       run: |
