@@ -23,20 +23,20 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install -y libncurses6 libstdc++6 zlib1g zlib1g-dev libffi-dev libssl-dev
+        sudo apt install -y libncurses6 libstdc++6 zlib1g zlib1g-dev libffi-dev libssl-dev unzip openjdk-17-jdk
         python -m pip install --upgrade pip
         pip install cython buildozer
 
-    - name: Pre-accept Android SDK licenses
+    - name: Accept Android SDK Licenses
       run: |
         mkdir -p ~/.android
-        echo '8933bad161af4178b1185d1a37fbf41ea5269c55' > ~/.android/repositories.cfg || true
+        echo "### User Agreements" > ~/.android/repositories.cfg
         yes | sdkmanager --licenses || true
 
-    - name: Patch buildozer.spec with stable build-tools version
+    - name: Patch buildozer.spec to force build-tools version
       run: |
-        sed -i '/^# android.build_tools/s/^# //' buildozer.spec
-        sed -i '/^android.build_tools/ s/=.*/= 34.0.0/' buildozer.spec
+        sed -i '/^# *android.build_tools/s/^# *//' buildozer.spec || echo "android.build_tools = 34.0.0" >> buildozer.spec
+        sed -i 's/^android.build_tools =.*/android.build_tools = 34.0.0/' buildozer.spec
 
     - name: Build APK
       run: |
