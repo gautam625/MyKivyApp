@@ -4,16 +4,19 @@ package.name = mykivyapp
 package.domain = org.example
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas
-version = 0.1
-requirements = kivy
+version = 1.0
+requirements = python3,kivy
 orientation = portrait
 osx.kivy_version = 2.1.0
 
-
 [buildozer]
-android.sdk_path = $HOME/.buildozer/android/platform/android-sdk
-android.ndk_path = $HOME/.buildozer/android/platform/android-ndk-r25b
-android.api = 33
-android.build_tools = 34.0.0
 log_level = 2
 warn_on_root = 1
+
+[app]
+android.api = 33
+android.minapi = 21
+android.ndk = 25b
+android.sdk = 24
+android.build_tools = 34.0.0
+android.arch = armeabi-v7a
