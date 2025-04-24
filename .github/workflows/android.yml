@@ -1,4 +1,4 @@
-name: Build APK
+name: Build Kivy APK
 
 on:
   push:
@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-    name: Build APK
     runs-on: ubuntu-latest
 
     steps:
@@ -30,19 +29,20 @@ jobs:
     - name: Accept Android SDK Licenses
       run: |
         mkdir -p ~/.android
-        echo "### User Agreements" > ~/.android/repositories.cfg
+        echo "### Accepted licenses" > ~/.android/repositories.cfg
         yes | sdkmanager --licenses || true
 
-    - name: Patch buildozer.spec to force build-tools version
+    - name: Force build-tools version in buildozer.spec
       run: |
-        sed -i '/^# *android.build_tools/s/^# *//' buildozer.spec || echo "android.build_tools = 34.0.0" >> buildozer.spec
-        sed -i 's/^android.build_tools =.*/android.build_tools = 34.0.0/' buildozer.spec
+        if grep -q "^# *android.build_tools" buildozer.spec; then
+          sed -i '/^# *android.build_tools/s/^# *//' buildozer.spec
+        fi
+        sed -i 's/^android.build_tools =.*/android.build_tools = 34.0.0/' buildozer.spec || echo "android.build_tools = 34.0.0" >> buildozer.spec
 
-    - name: Build APK
-      run: |
-        buildozer android debug
+    - name: Build the APK
+      run: buildozer android debug
 
-    - name: Upload APK
+    - name: Upload the APK
       uses: actions/upload-artifact@v4
       with:
         name: MyKivyApp-APK
